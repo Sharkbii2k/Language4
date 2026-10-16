@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>WordDeck — Học Nhẹ · Nhớ Lâu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(165deg, #eef6df 0%, #f5f8ef 45%, #ecf2e6 100%);
+      --primary-dark: #15382e;
+      --primary-darker: #0f2922;
+      --accent-lime: #84cc16;
+      --accent-soft: #d9f99d;
+      --text-main: #132a23;
+      --text-muted: #64746b;
+      --card-front-bg: linear-gradient(145deg, #ffffff 0%, #f4fce8 65%, #ecfccb 100%);
+      --card-back-bg: linear-gradient(155deg, #163a30 0%, #102c24 100%);
+      --shadow-soft: 0 14px 34px -8px rgba(21, 56, 46, 0.10), 0 4px 12px -2px rgba(21, 56, 46, 0.05);
+      --radius-xl: 26px;
+      --radius-pill: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 14px;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* HEADER */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(21, 56, 46, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(21, 56, 46, 0.18);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.15;
+    }
+
+    .brand-sub {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .deck-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: 1px solid rgba(21, 56, 46, 0.06);
+    }
+
+    .deck-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-lime);
+      box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.2);
+    }
+
+    /* TOP CONTROLS */
+    .mode-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-tabs {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 4px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(21, 56, 46, 0.05);
+      border: 1px solid rgba(21, 56, 46, 0.05);
+    }
+
+    .mode-tab {
+      border: none;
+      background: transparent;
+      padding: 7px 13px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .mode-tab.active {
+      background: var(--primary-dark);
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(21, 56, 46, 0.18);
+    }
+
+    /* 4 LANGUAGE MENU TABS */
+    .lang-menu {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.65);
+      padding: 5px;
+      border-radius: 16px;
+      border: 1px solid rgba(21, 56, 46, 0.07);
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 7px 4px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .lang-btn.active {
+      background: #ffffff;
+      color: var(--primary-dark);
+      box-shadow: 0 3px 9px rgba(21, 56, 46, 0.10);
+    }
+
+    /* LEVEL SELECTOR BAR */
+    .level-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 0;
+      scrollbar-width: none;
+    }
+    .level-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .level-pill {
+      border: 1px solid rgba(21, 56, 46, 0.1);
+      background: rgba(255, 255, 255, 0.75);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+      flex-shrink: 0;
+    }
+
+    .level-pill.active {
+      background: var(--primary-dark);
+      color: #fff;
+      border-color: var(--primary-dark);
+    }
+
+    .level-add-btn {
+      border: 1px dashed rgba(21, 56, 46, 0.3);
+      background: rgba(255, 255, 255, 0.5);
+      color: var(--primary-dark);
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* BANNER HEADING */
+    .hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 2px;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .hero-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.15;
+    }
+
+    .hero-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* PROGRESS ROW */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 2px 2px;
+    }
+
+    .progress-count {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-main);
+      min-width: 58px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(21, 56, 46, 0.09);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #65a30d;
+      border-radius: var(--radius-pill);
+      width: 10%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-label {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* FLASHCARD 3D */
+    .card-scene {
+      perspective: 1200px;
+      width: 100%;
+      height: 330px;
+      position: relative;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: var(--radius-xl);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    /* FRONT FACE */
+    .card-front {
+      background: var(--card-front-bg);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .card-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lang-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .lang-tag .diamond {
+      width: 7px;
+      height: 7px;
+      background: #84cc16;
+      transform: rotate(45deg);
+      border-radius: 1.5px;
+    }
+
+    .audio-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(21, 56, 46, 0.08);
+      background: #ffffff;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(21, 56, 46, 0.08);
+      transition: transform 0.15s ease;
+    }
+
+    .audio-btn:active {
+      transform: scale(0.92);
+    }
+
+    .front-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      padding: 10px 4px;
+      overflow: hidden;
+    }
+
+    .front-hint-top {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #84968b;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    /* MẶT TRƯỚC 1 DÒNG DUY NHẤT - CO GIÃN TỰ ĐỘNG */
+    .front-word-wrap {
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .front-word {
+      font-weight: 800;
+      color: var(--primary-dark);
+      white-space: nowrap;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .card-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid rgba(21, 56, 46, 0.08);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* BACK FACE (4 DÒNG) */
+    .card-back {
+      background: var(--card-back-bg);
+      color: #ffffff;
+      transform: rotateY(180deg);
+    }
+
+    .back-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .back-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.65);
+      text-transform: uppercase;
+    }
+
+    .back-tag .diamond {
+      width: 7px;
+      height: 7px;
+      background: #a3e635;
+      transform: rotate(45deg);
+      border-radius: 1.5px;
+    }
+
+    .back-index {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .back-rows {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 9px;
+      flex: 1;
+      margin: 6px 0;
+    }
+
+    .back-row {
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .back-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .row-word {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .row-phonetic {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .row-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.52);
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .phonetic-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #d9f99d;
+    }
+
+    .meaning-val {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+
+    .example-val {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #ecfccb;
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    .example-vi-val {
+      font-size: 0.76rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    .back-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* BOTTOM NAVIGATION CONTROLS */
+    .controls-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-top: 2px;
+    }
+
+    .nav-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(21, 56, 46, 0.08);
+      background: #ffffff;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(21, 56, 46, 0.06);
+      transition: all 0.15s ease;
+    }
+
+    .nav-circle:active {
+      transform: scale(0.92);
+    }
+
+    .flip-main-btn {
+      min-width: 155px;
+      height: 46px;
+      border-radius: 16px;
+      border: none;
+      background: var(--primary-dark);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(21, 56, 46, 0.22);
+      transition: all 0.15s ease;
+    }
+
+    .flip-main-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* NẠP TỪ HÀNG LOẠT SIÊU TỐC PANEL */
+    .panel-box {
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: var(--radius-xl);
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(21, 56, 46, 0.08);
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-box.active {
+      display: flex;
+    }
+
+    .bulk-textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(21, 56, 46, 0.18);
+      font-family: inherit;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      outline: none;
+      resize: none;
+      background: #f9fbf6;
+    }
+
+    .bulk-textarea:focus {
+      border-color: var(--primary-dark);
+      background: #fff;
+    }
+
+    .save-btn {
+      height: 42px;
+      border-radius: 13px;
+      border: none;
+      background: var(--primary-dark);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .save-btn:active {
+      opacity: 0.85;
+    }
+
+    .backup-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(21, 56, 46, 0.12);
+    }
+
+    .sub-btn {
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid rgba(21, 56, 46, 0.15);
+      background: #fff;
+      color: var(--primary-dark);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .toast-msg {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #15803d;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    /* FOOTER */
+    .app-footer {
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      padding-top: 4px;
+    }
+
+    .app-footer strong {
+      color: var(--text-main);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">WordDeck</div>
+          <div class="brand-sub">HỌC NHẸ · NHỚ LÂU</div>
+        </div>
+      </div>
+      <div class="deck-badge">
+        <span class="dot"></span>
+        <span id="totalBadgeText">0 từ trong bộ thẻ</span>
+      </div>
+    </header>
+
+    <!-- CHẾ ĐỘ FLASHCARD / NẠP TỪ -->
+    <div class="mode-bar">
+      <div class="mode-tabs">
+        <button class="mode-tab active" id="tabStudyBtn" onclick="switchMode('study')">
+          <span>🃏</span> Flashcard
+        </button>
+        <button class="mode-tab" id="tabAddBtn" onclick="switchMode('add')">
+          <span>＋</span> Nạp từ vựng
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 MENU NGÔN NGỮ -->
+    <nav class="lang-menu" aria-label="Chọn ngôn ngữ">
+      <button class="lang-btn active" data-lang="en" onclick="selectLanguage('en')">Tiếng Anh</button>
+      <button class="lang-btn" data-lang="zh" onclick="selectLanguage('zh')">Tiếng Trung</button>
+      <button class="lang-btn" data-lang="id" onclick="selectLanguage('id')">Indonesia</button>
+      <button class="lang-btn" data-lang="ko" onclick="selectLanguage('ko')">Tiếng Hàn</button>
+    </nav>
+
+    <!-- DANH SÁCH LEVEL (1 -> 5 + Thêm Level) -->
+    <div class="level-bar" id="levelBar"></div>
+
+    <!-- KHU VỰC HỌC FLASHCARD -->
+    <main id="studyView">
+      <div class="hero-row">
+        <div>
+          <div class="hero-eyebrow">GÓC LUYỆN NHỚ</div>
+          <h1 class="hero-title">Lật thẻ, gọi tên từ.</h1>
+          <p class="hero-sub">Nhớ nghĩa trước khi mở mặt sau.</p>
+        </div>
+      </div>
+
+      <!-- THANH TIẾN ĐỘ -->
+      <div class="progress-row" style="margin: 8px 0;">
+        <span class="progress-count" id="progressText">01 / 01</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-label" id="levelLabelRight">LEVEL 1</span>
+      </div>
+
+      <!-- THẺ FLASHCARD -->
+      <div class="card-scene">
+        <div class="card-inner" id="cardInner" onclick="flipCard()">
+          
+          <!-- MẶT TRƯỚC (1 DÒNG DUY NHẤT CO GIÃN) -->
+          <div class="card-face card-front">
+            <div class="card-top-bar">
+              <div class="lang-tag">
+                <span class="diamond"></span>
+                <span id="frontLangLabel">TỪ TIẾNG ANH</span>
+              </div>
+              <button class="audio-btn" title="Nghe phát âm" onclick="speakWord(event)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="front-center">
+              <div class="front-hint-top">YOUR NEXT WORD</div>
+              <div class="front-word-wrap" id="frontWordWrap">
+                <span class="front-word" id="frontWordText">interesting</span>
+              </div>
+            </div>
+
+            <div class="card-bottom-bar">
+              <span>Nghĩ thử nghĩa của từ này</span>
+              <span>↗</span>
+            </div>
+          </div>
+
+          <!-- MẶT SAU (4 DÒNG: TỪ VỰNG, PHIÊN ÂM, NGHĨA, CÂU VÍ DỤ + NGHĨA) -->
+          <div class="card-face card-back">
+            <div class="back-top-bar">
+              <div class="back-tag">
+                <span class="diamond"></span>
+                <span>GHI NHỚ</span>
+              </div>
+              <span class="back-index" id="backCardNumber">01</span>
+            </div>
+
+            <div class="back-rows">
+              <!-- Dòng 1: Từ vựng -->
+              <div class="back-row">
+                <div class="row-word" id="backWordText">interesting</div>
+              </div>
+
+              <!-- Dòng 2: Phiên âm (Tự động ẩn với Tiếng Indonesia) -->
+              <div class="back-row row-phonetic" id="backPhoneticRow">
+                <span class="row-label">PHIÊN ÂM</span>
+                <span class="phonetic-val" id="backPhoneticText">/ˈɪntrəstɪŋ/</span>
+              </div>
+
+              <!-- Dòng 3: Nghĩa -->
+              <div class="back-row">
+                <div class="row-label">NGHĨA</div>
+                <div class="meaning-val" id="backMeaningText">Thú vị</div>
+              </div>
+
+              <!-- Dòng 4: Câu ví dụ & Nghĩa tiếng Việt -->
+              <div class="back-row">
+                <div class="row-label">VÍ DỤ</div>
+                <div class="example-val" id="backExampleText">This book is very interesting.</div>
+                <div class="example-vi-val" id="backExampleViText">Cuốn sách này rất thú vị.</div>
+              </div>
+            </div>
+
+            <div class="back-bottom-bar">
+              <span>Một lần nhớ thêm một từ</span>
+              <span style="color:#a3e635;">✳</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NÚT ĐIỀU KHIỂN DƯỚI -->
+      <div class="controls-row" style="margin-top: 12px;">
+        <button class="nav-circle" onclick="prevCard()" aria-label="Thẻ trước">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <button class="flip-main-btn" onclick="flipCard()">
+          <span id="flipBtnLabel">Lật thẻ</span>
+          <span style="color: #a3e635;">↻</span>
+        </button>
+
+        <button class="nav-circle" onclick="nextCard()" aria-label="Thẻ tiếp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </main>
+
+    <!-- KHU VỰC DÁN HÀNG LOẠT NGAY TRÊN WEB (KHÔNG CẦN SỬA CODE) -->
+    <section class="panel-box" id="addView">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight: 800; font-size: 0.9rem;">
+          Nạp vào: <span id="addTargetLabel" style="color:#65a30d;">Tiếng Anh - Level 1</span>
+        </div>
+        <button onclick="clearCurrentLevel()" style="border:none; background:transparent; color:#dc2626; font-size:0.7rem; font-weight:700; cursor:pointer;">Xoá trống Level này</button>
+      </div>
+
+      <p id="formatHintText" style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35;">
+        Chỉ cần copy danh sách từ vựng tôi gửi và dán thẳng vào ô bên dưới (có thể dán 100 - 500 từ cùng lúc):
+      </p>
+
+      <textarea class="bulk-textarea" id="bulkInput" placeholder="Dán danh sách từ vựng vào đây..."></textarea>
+
+      <div class="toast-msg" id="toastMsg"></div>
+
+      <button class="save-btn" onclick="importBulkText()">＋ Lưu ngay vào bộ thẻ</button>
+
+      <div class="backup-row">
+        <button class="sub-btn" onclick="exportAllData()">⬇ Tải file dự phòng</button>
+        <button class="sub-btn" onclick="document.getElementById('fileImportInput').click()">⬆ Nhập từ file</button>
+        <input type="file" id="fileImportInput" accept=".json" style="display:none" onchange="importFromFile(event)" />
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <strong>WordDeck</strong> · Mỗi ngày một chút, nhớ lâu thật lâu.
+    </footer>
+  </div>
+
+  <script>
+    /* =========================================================================
+       DỮ LIỆU GỐC TÍCH HỢP SẴN (200 TỪ TIẾNG ANH ĐẦU TIÊN Ở LEVEL 1)
+       ========================================================================= */
+    const DATA_EN = {
+      1: `
+about|/əˈbaʊt/|Khoảng, về|Tell me all about your trip.|Hãy kể cho tôi nghe tất cả về chuyến đi của bạn.
+above|/əˈbʌv/|Ở trên, phía trên|The picture hangs above the sofa.|Bức tranh treo phía trên ghế sofa.
+across|/əˈkrɔːs/|Băng qua, ngang qua|She walked across the street.|Cô ấy đi bộ băng qua đường.
+action|/ˈækʃn/|Hành động|We need to take action right now.|Chúng ta cần phải hành động ngay bây giờ.
+activity|/ækˈtɪvəti/|Hoạt động|Outdoor activities are good for health.|Các hoạt động ngoài trời rất tốt cho sức khỏe.
+actor|/ˈæktər/|Nam diễn viên|He is a famous movie actor.|Anh ấy là một nam diễn viên điện ảnh nổi tiếng.
+actress|/ˈæktrəs/|Nữ diễn viên|She won an award for best actress.|Cô ấy đã giành giải nữ diễn viên xuất sắc nhất.
+add|/æd/|Thêm vào, cộng|Add some sugar to the tea.|Hãy thêm một ít đường vào trà.
+address|/ˈædres/|Địa chỉ|Please write your address on this form.|Vui lòng viết địa chỉ của bạn vào mẫu đơn này.
+adult|/ˈædʌlt/|Người lớn, trưởng thành|Tickets are ten dollars for adults.|Vé có giá mười đô la cho người lớn.
+advice|/ədˈvaɪs/|Lời khuyên|Thank you for your helpful advice.|Cảm ơn lời khuyên hữu ích của bạn.
+afraid|/əˈfreɪd/|Sợ, e sợ|Don't be afraid of making mistakes.|Đừng sợ mắc sai lầm.
+after|/ˈæftər/|Sau, sau khi|Let's go for a walk after dinner.|Hãy đi dạo sau bữa tối nhé.
+afternoon|/ˌæftərˈnuːn/|Buổi chiều|I have a meeting this afternoon.|Tôi có một cuộc họp vào chiều nay.
+again|/əˈɡen/|Lại, một lần nữa|Could you say that again, please?|Bạn có thể nói lại điều đó một lần nữa được không?
+age|/eɪdʒ/|Tuổi, độ tuổi|Children of your age need plenty of sleep.|Trẻ em ở độ tuổi của bạn cần ngủ nhiều.
+ago|/əˈɡoʊ/|Trước đây, cách đây|They moved to this city two years ago.|Họ đã chuyển đến thành phố này cách đây hai năm.
+agree|/əˈɡriː/|Đồng ý|I completely agree with your idea.|Tôi hoàn toàn đồng ý với ý kiến của bạn.
+air|/er/|Không khí, hàng không|Let's open the window for some fresh air.|Hãy mở cửa sổ để đón chút không khí trong lành.
+airport|/ˈerpɔːrt/|Sân bay|We arrived at the airport early.|Chúng tôi đã đến sân bay sớm.
+all|/ɔːl/|Tất cả, toàn bộ|All the students passed the exam.|Tất cả học sinh đều vượt qua kỳ thi.
+also|/ˈɔːlsoʊ/|Cũng, ngoài ra|She speaks English and also French.|Cô ấy nói tiếng Anh và cả tiếng Pháp nữa.
+always|/ˈɔːlweɪz/|Luôn luôn|He always wakes up at six o'clock.|Anh ấy luôn thức dậy lúc sáu giờ.
+amazing|/əˈmeɪzɪŋ/|Tuyệt vời, đáng kinh ngạc|The view from the mountain is amazing.|Khung cảnh nhìn từ ngọn núi thật tuyệt vời.
+angry|/ˈæŋɡri/|Tức giận|My father was angry because I came home late.|Bố tôi đã tức giận vì tôi về nhà muộn.
+animal|/ˈænɪml/|Động vật, thú vật|Lions and tigers are wild animals.|Sư tử và hổ là những động vật hoang dã.
+another|/əˈnʌðər/|Một cái khác, người khác|Would you like another cup of coffee?|Bạn có muốn thêm một tách cà phê khác không?
+answer|/ˈænsər/|Câu trả lời, trả lời|I don't know the answer to this question.|Tôi không biết câu trả lời cho câu hỏi này.
+any|/ˈeni/|Bất kỳ, chút nào|Do you have any questions for me?|Bạn có câu hỏi nào dành cho tôi không?
+anyone|/ˈeniwʌn/|Bất cứ ai|Did anyone call me while I was out?|Có ai gọi cho tôi lúc tôi ra ngoài không?
+anything|/ˈeniθɪŋ/|Bất cứ thứ gì|Are you doing anything special tonight?|Tối nay bạn có làm gì đặc biệt không?
+apartment|/əˈpɑːrtmənt/|Căn hộ|They rented a small apartment downtown.|Họ đã thuê một căn hộ nhỏ ở trung tâm thành phố.
+apple|/ˈæpl/|Quả táo|Eating an apple a day keeps you healthy.|Ăn một quả táo mỗi ngày giúp bạn khỏe mạnh.
+area|/ˈeriə/|Khu vực, diện tích|There are many parks in this area.|Có rất nhiều công viên trong khu vực này.
+arm|/ɑːrm/|Cánh tay|He broke his arm while playing football.|Anh ấy bị gãy tay khi đang chơi bóng đá.
+around|/əˈraʊnd/|Xung quanh, khoảng|We sat around the table and talked.|Chúng tôi ngồi quanh bàn và trò chuyện.
+arrive|/əˈraɪv/|Đến nơi|What time does the train arrive?|Mấy giờ tàu hỏa đến nơi?
+art|/ɑːrt/|Nghệ thuật, mỹ thuật|She is very interested in modern art.|Cô ấy rất quan tâm đến nghệ thuật hiện đại.
+article|/ˈɑːrtɪkl/|Bài báo, bài viết|I read an interesting article this morning.|Tôi đã đọc một bài báo thú vị vào sáng nay.
+artist|/ˈɑːrtɪst/|Họa sĩ, nghệ sĩ|Picasso was a famous Spanish artist.|Picasso là một họa sĩ nổi tiếng người Tây Ban Nha.
+ask|/æsk/|Hỏi, yêu cầu|Ask the teacher if you don't understand.|Hãy hỏi giáo viên nếu bạn không hiểu.
+aunt|/ænt/|Cô, dì, thím, mợ|My aunt lives in a house by the sea.|Dì của tôi sống trong một ngôi nhà cạnh biển.
+autumn|/ˈɔːtəm/|Mùa thu|Leaves turn yellow and red in autumn.|Lá cây chuyển sang màu vàng và đỏ vào mùa thu.
+away|/əˈweɪ/|Xa, đi xa, cách xa|The beach is only two miles away.|Bãi biển chỉ cách đây hai dặm.
+baby|/ˈbeɪbi/|Em bé|The baby is sleeping peacefully in the crib.|Em bé đang ngủ ngon lành trong cũi.
+back|/bæk/|Phía sau, cái lưng, quay lại|When will you come back from work?|Khi nào bạn sẽ đi làm về?
+bad|/bæd/|Xấu, tệ, dở|Smoking is very bad for your lungs.|Hút thuốc rất có hại cho phổi của bạn.
+bag|/bæɡ/|Cái túi, cặp sách|She carried a heavy shopping bag.|Cô ấy xách một chiếc túi mua sắm nặng.
+ball|/bɔːl/|Quả bóng|Kick the ball into the goal!|Hãy sút quả bóng vào khung thành!
+banana|/bəˈnænə/|Quả chuối|Monkeys love eating ripe bananas.|Khỉ rất thích ăn chuối chín.
+band|/bænd/|Ban nhạc|He plays the guitar in a rock band.|Anh ấy chơi đàn ghi-ta trong một ban nhạc rock.
+bank|/bæŋk/|Ngân hàng, bờ sông|I need to go to the bank to withdraw money.|Tôi cần đến ngân hàng để rút tiền.
+bath|/bæθ/|Bồn tắm, sự tắm|I like taking a warm bath before bed.|Tôi thích tắm nước ấm trước khi đi ngủ.
+bathroom|/ˈbæθruːm/|Phòng tắm, nhà vệ sinh|Excuse me, where is the bathroom?|Xin lỗi, phòng vệ sinh ở đâu vậy?
+be|/biː/|Thì, là, ở|I want to be a doctor in the future.|Tôi muốn trở thành bác sĩ trong tương lai.
+beach|/biːtʃ/|Bãi biển|We spent the whole day on the beach.|Chúng tôi đã dành cả ngày trên bãi biển.
+beautiful|/ˈbjuːtɪfl/|Đẹp, xinh đẹp|She wore a beautiful dress to the party.|Cô ấy mặc một chiếc váy xinh đẹp đến bữa tiệc.
+because|/bɪˈkɔːz/|Bởi vì|I stayed home because it was raining heavily.|Tôi ở nhà bởi vì trời mưa to.
+become|/bɪˈkʌm/|Trở nên, trở thành|The weather is becoming colder every day.|Thời tiết đang trở nên lạnh hơn mỗi ngày.
+bed|/bed/|Cái giường|It is time for the kids to go to bed.|Đã đến giờ bọn trẻ phải đi ngủ.
+bedroom|/ˈbedruːm/|Phòng ngủ|Our house has three bedrooms.|Ngôi nhà của chúng tôi có ba phòng ngủ.
+beer|/bɪr/|Bia|They ordered two glasses of cold beer.|Họ đã gọi hai cốc bia lạnh.
+before|/bɪˈfɔːr/|Trước, trước khi|Wash your hands before eating dinner.|Hãy rửa tay trước khi ăn tối.
+begin|/bɪˈɡɪn/|Bắt đầu|The movie will begin in ten minutes.|Bộ phim sẽ bắt đầu trong mười phút nữa.
+beginning|/bɪˈɡɪnɪŋ/|Sự bắt đầu, phần đầu|I missed the beginning of the concert.|Tôi đã bỏ lỡ phần đầu của buổi hòa nhạc.
+behind|/bɪˈhaɪnd/|Phía sau, đằng sau|The garden is behind the house.|Khu vườn nằm ở phía sau ngôi nhà.
+believe|/bɪˈliːv/|Tin, tin tưởng|I believe that you can do it.|Tôi tin rằng bạn có thể làm được điều đó.
+below|/bɪˈloʊ/|Ở dưới, thấp hơn|Please do not write below this line.|Vui lòng không viết xuống dưới dòng kẻ này.
+best|/best/|Tốt nhất, giỏi nhất|This is the best coffee in town.|Đây là quán cà phê ngon nhất trong thị trấn.
+better|/ˈbetər/|Tốt hơn, khỏe hơn|I feel much better after resting.|Tôi cảm thấy khỏe hơn nhiều sau khi nghỉ ngơi.
+between|/bɪˈtwiːn/|Ở giữa (hai vật/người)|The pharmacy is between the bank and the hotel.|Hiệu thuốc nằm giữa ngân hàng và khách sạn.
+bicycle|/ˈbaɪsɪkl/|Xe đạp|He rides his bicycle to work every morning.|Anh ấy đạp xe đi làm mỗi sáng.
+big|/bɪɡ/|To, lớn|Ho Chi Minh City is a very big city.|Thành phố Hồ Chí Minh là một thành phố rất lớn.
+bike|/baɪk/|Xe đạp, xe máy|Can I borrow your bike this afternoon?|Chiều nay tôi mượn xe đạp của bạn được không?
+bill|/bɪl/|Hóa đơn|Waiter, could we have the bill, please?|Phục vụ ơi, cho chúng tôi xin hóa đơn nhé.
+bird|/bɜːrd/|Con chim|A small bird is singing in the tree.|Một chú chim nhỏ đang hót trên cây.
+birthday|/ˈbɜːrθdeɪ/|Ngày sinh nhật|Happy birthday! I bought a gift for you.|Chúc mừng sinh nhật! Tôi đã mua một món quà cho bạn.
+black|/blæk/|Màu đen|He is wearing a black jacket today.|Hôm nay anh ấy mặc một chiếc áo khoác màu đen.
+blog|/blɔːɡ/|Nhật ký trực tuyến (Blog)|She writes a travel blog every week.|Cô ấy viết một bài blog du lịch mỗi tuần.
+blonde|/blɑːnd/|Tóc vàng hoe|The girl with blonde hair is my cousin.|Cô gái có mái tóc vàng là em họ của tôi.
+blue|/bluː/|Màu xanh dương|The sky is clear and blue today.|Bầu trời hôm nay trong xanh.
+boat|/boʊt/|Con thuyền, tàu nhỏ|We took a boat trip along the river.|Chúng tôi đã đi thuyền dọc theo con sông.
+body|/ˈbɑːdi/|Cơ thể, thân thể|Regular exercise keeps your body strong.|Tập thể dục thường xuyên giữ cho cơ thể bạn khỏe mạnh.
+book|/bʊk/|Quyển sách, đặt chỗ|I am reading a very good book right now.|Hiện tại tôi đang đọc một cuốn sách rất hay.
+boot|/buːt/|Giày ống, ủng|You should wear warm boots in the snow.|Bạn nên đi giày ống ấm khi đi trên tuyết.
+bored|/bɔːrd/|Chán nản, thấy chán|The children quickly got bored indoors.|Bọn trẻ nhanh chóng cảm thấy chán khi ở trong nhà.
+boring|/ˈbɔːrɪŋ/|Nhàm chán, tẻ nhạt|The lecture was long and boring.|Bài giảng vừa dài vừa nhàm chán.
+born|/bɔːrn/|Được sinh ra|I was born in nineteen ninety-eight.|Tôi sinh năm một nghìn chín trăm chín mươi tám.
+both|/boʊθ/|Cả hai|Both of my parents are teachers.|Cả bố và mẹ tôi đều là giáo viên.
+bottle|/ˈbɑːtl/|Chai, lọ|He drank a whole bottle of water.|Anh ấy đã uống hết cả một chai nước.
+box|/bɑːks/|Cái hộp, thùng|Put all your old toys into this box.|Hãy bỏ tất cả đồ chơi cũ của bạn vào chiếc hộp này.
+boy|/bɔɪ/|Cậu bé, con trai|The little boy is playing with his dog.|Cậu bé đang chơi đùa với chú chó của mình.
+boyfriend|/ˈbɔɪfrend/|Bạn trai|She introduced her boyfriend to her family.|Cô ấy đã giới thiệu bạn trai với gia đình mình.
+bread|/bred/|Bánh mì|I love the smell of fresh bread.|Tôi yêu mùi hương của bánh mì mới nướng.
+break|/breɪk/|Làm vỡ, giờ giải lao|Let's take a ten-minute break.|Chúng ta hãy nghỉ giải lao mười phút nhé.
+breakfast|/ˈbrekfəst/|Bữa ăn sáng|Breakfast is the most important meal of the day.|Bữa sáng là bữa ăn quan trọng nhất trong ngày.
+bring|/brɪŋ/|Mang lại, đem theo|Remember to bring your umbrella with you.|Nhớ mang theo ô bên mình nhé.
+brother|/ˈbrʌðər/|Anh/em trai|My older brother works in a bank.|Anh trai tôi làm việc tại một ngân hàng.
+brown|/braʊn/|Màu nâu|She has beautiful brown eyes.|Cô ấy có đôi mắt màu nâu tuyệt đẹp.
+build|/bɪld/|Xây dựng|They plan to build a new bridge here.|Họ dự định xây một cây cầu mới ở đây.
+building|/ˈbɪldɪŋ/|Tòa nhà|That tall building is our new office.|Tòa nhà cao đó là văn phòng mới của chúng tôi.
+bus|/bʌs/|Xe buýt|I take the bus to school every morning.|Tôi đi xe buýt đến trường vào mỗi buổi sáng.
+business|/ˈbɪznəs/|Kinh doanh, công việc|He runs a small family business.|Anh ấy điều hành một việc kinh doanh nhỏ của gia đình.
+busy|/ˈbɪznəs/|Bận rộn|The streets are very busy during rush hour.|Đường phố rất nhộn nhịp vào giờ cao điểm.
+but|/bʌt/|Nhưng|I called him, but he did not answer.|Tôi đã gọi cho anh ấy, nhưng anh ấy không trả lời.
+butter|/ˈbʌtər/|Bơ|Spread some butter on the warm toast.|Hãy phết một ít bơ lên lát bánh mì nướng ấm.
+buy|/baɪ/|Mua|Where did you buy that nice shirt?|Bạn đã mua chiếc áo sơ mi đẹp đó ở đâu vậy?
+by|/baɪ/|Bằng, bởi, cạnh|We traveled to Da Nang by train.|Chúng tôi đã đi du lịch Đà Nẵng bằng tàu hỏa.
+bye|/baɪ/|Tạm biệt|Bye! See you again tomorrow morning.|Tạm biệt! Hẹn gặp lại bạn vào sáng mai nhé.
+cafe|/kæˈfeɪ/|Quán cà phê|Let's meet at the small cafe near the park.|Hãy gặp nhau ở quán cà phê nhỏ gần công viên nhé.
+cake|/keɪk/|Bánh ngọt, bánh kem|My mother baked a chocolate cake for me.|Mẹ tôi đã nướng một chiếc bánh sô-cô-la cho tôi.
+call|/kɔːl/|Gọi điện, cuộc gọi|Please call me when you get home.|Làm ơn hãy gọi cho tôi khi bạn về đến nhà.
+camera|/ˈkæmərə/|Máy ảnh|He bought a new camera for his holiday.|Anh ấy đã mua một chiếc máy ảnh mới cho kỳ nghỉ của mình.
+can|/kæn/|Có thể|Can you swim across this river?|Bạn có thể bơi qua con sông này không?
+cannot|/ˈkænɑːt/|Không thể|I cannot find my house keys anywhere.|Tôi không thể tìm thấy chìa khóa nhà ở bất cứ đâu.
+capital|/ˈkæpɪtl/|Thủ đô, chữ viết hoa|Hanoi is the capital of Vietnam.|Hà Nội là thủ đô của Việt Nam.
+car|/kɑːr/|Xe hơi, ô tô|He washes his car every Sunday morning.|Anh ấy rửa xe ô tô vào mỗi sáng Chủ nhật.
+card|/kɑːrd/|Thẻ, thiệp|Can I pay the bill by credit card?|Tôi có thể thanh toán hóa đơn bằng thẻ tín dụng không?
+career|/kəˈrɪr/|Sự nghiệp|She started her career as a teacher.|Cô ấy bắt đầu sự nghiệp của mình là một giáo viên.
+carrot|/ˈkærət/|Củ cà rốt|Rabbits love eating fresh carrots.|Thỏ rất thích ăn cà rốt tươi.
+carry|/ˈkæri/|Mang, vác, xách|Let me help you carry that heavy bag.|Để tôi giúp bạn xách chiếc túi nặng đó nhé.
+cat|/kæt/|Con mèo|The cat is sleeping on the warm sofa.|Con mèo đang ngủ trên chiếc ghế sofa ấm áp.
+CD|/ˌsiː ˈdiː/|Đĩa CD|He still keeps a collection of old music CDs.|Anh ấy vẫn giữ một bộ sưu tập đĩa CD nhạc cũ.
+cent|/sent/|Đồng xu (1/100 đô la)|This candy costs only fifty cents.|Viên kẹo này chỉ có giá năm mươi xu.
+center|/ˈsentər/|Trung tâm|The hotel is right in the city center.|Khách sạn nằm ngay tại trung tâm thành phố.
+century|/ˈsentʃəri/|Thế kỷ|This old temple was built a century ago.|Ngôi đền cổ này được xây dựng cách đây một thế kỷ.
+chair|/tʃer/|Cái ghế|Please pull up a chair and sit down.|Xin hãy kéo ghế lại và ngồi xuống.
+change|/tʃeɪndʒ/|Thay đổi, tiền thừa|Don't forget to count your change.|Đừng quên đếm lại tiền thừa của bạn nhé.
+chart|/tʃɑːrt/|Biểu đồ, bảng biểu|Look at the chart on page ten.|Hãy nhìn vào biểu đồ ở trang mười.
+cheap|/tʃiːp/|Rẻ, bình dân|Fresh vegetables are very cheap at this market.|Rau tươi ở khu chợ này rất rẻ.
+check|/tʃek/|Kiểm tra|Please check your answers before handing in.|Vui lòng kiểm tra lại câu trả lời trước khi nộp bài.
+cheese|/tʃiːz/|Phô mai|Would you like extra cheese on your pizza?|Bạn có muốn thêm phô mai vào bánh pizza không?
+chicken|/ˈtʃɪkɪn/|Con gà, thịt gà|We had roast chicken for dinner last night.|Tối qua chúng tôi đã ăn món gà quay cho bữa tối.
+child|/tʃaɪld/|Đứa trẻ, con cái|Every child loves playing in the park.|Mọi đứa trẻ đều thích vui chơi trong công viên.
+chocolate|/ˈtʃɔːklət/|Sô-cô-la|Dark chocolate is my favorite sweet.|Sô-cô-la đen là món ngọt yêu thích của tôi.
+choose|/tʃuːz/|Chọn, lựa chọn|You can choose any book you like.|Bạn có thể chọn bất kỳ cuốn sách nào bạn thích.
+cinema|/ˈsɪnəmə/|Rạp chiếu phim|Let's go to the cinema this Friday night.|Tối thứ Sáu tuần này hãy đi xem phim ở rạp nhé.
+city|/ˈsɪti/|Thành phố|Which city do you want to visit next?|Bạn muốn ghé thăm thành phố nào tiếp theo?
+class|/klæs/|Lớp học, buổi học|Our English class starts at eight o'clock.|Lớp học tiếng Anh của chúng tôi bắt đầu lúc tám giờ.
+classroom|/ˈklæsruːm/|Phòng học|All students are waiting in the classroom.|Tất cả học sinh đang đợi trong phòng học.
+clean|/kliːn/|Sạch sẽ, lau dọn|I need to clean my room this weekend.|Tôi cần dọn dẹp phòng của mình vào cuối tuần này.
+climb|/klaɪm/|Leo, trèo|They plan to climb the mountain tomorrow.|Họ dự định leo núi vào ngày mai.
+clock|/klɑːk/|Đồng hồ treo tường/để bàn|The wall clock shows it is noon.|Chiếc đồng hồ treo tường chỉ bây giờ là mười hai giờ trưa.
+close|/kloʊz/|Đóng, khép, gần|Please close the window; it is cold outside.|Làm ơn đóng cửa sổ lại; bên ngoài trời lạnh đấy.
+clothes|/kloʊðz/|Quần áo|Pack warm clothes for your winter trip.|Hãy gói theo quần áo ấm cho chuyến đi mùa đông của bạn.
+club|/klʌb/|Câu lạc bộ|She joined the school music club.|Cô ấy đã tham gia câu lạc bộ âm nhạc của trường.
+coat|/koʊt/|Áo choàng, áo khoác dài|Put on your coat before going outside.|Hãy mặc áo khoác dài vào trước khi ra ngoài.
+coffee|/ˈkɔːfi/|Cà phê|A cup of hot coffee helps me wake up.|Một tách cà phê nóng giúp tôi tỉnh táo.
+cold|/koʊld/|Lạnh, cảm lạnh|Drink warm water if you have a cold.|Hãy uống nước ấm nếu bạn bị cảm lạnh.
+college|/ˈkɑːlɪdʒ/|Trường cao đẳng, đại học|My sister is studying art at college.|Chị gái tôi đang học ngành nghệ thuật ở trường đại học.
+color|/ˈkʌlər/|Màu sắc|What is your favorite color?|Màu sắc yêu thích của bạn là màu gì?
+come|/kʌm/|Đến, tới|Come here and look at this rainbow!|Hãy lại đây và nhìn cầu vồng này xem!
+common|/ˈkɑːmən/|Phổ biến, thông thường|Smith is a very common family name.|Smith là một họ rất phổ biến.
+company|/ˈkʌmpəni/|Công ty|He works for a large software company.|Anh ấy làm việc cho một công ty phần mềm lớn.
+compare|/kəmˈper/|So sánh|Always compare prices before buying a phone.|Hãy luôn so sánh giá cả trước khi mua điện thoại.
+complete|/kəmˈpliːt/|Hoàn thành, đầy đủ|Please complete this sentence with one word.|Vui lòng hoàn thành câu này bằng một từ.
+computer|/kəmˈpjuːtər/|Máy tính|I use my computer for work and study.|Tôi sử dụng máy tính cho công việc và học tập.
+concert|/ˈkɑːnsərt/|Buổi hòa nhạc|We bought two tickets for the rock concert.|Chúng tôi đã mua hai vé cho buổi hòa nhạc rock.
+conversation|/ˌkɑːnvərˈseɪʃn/|Cuộc trò chuyện, hội thoại|I had a long conversation with my neighbor.|Tôi đã có một cuộc trò chuyện dài với người hàng xóm.
+cook|/kʊk/|Nấu ăn, đầu bếp|My father is a very good cook.|Bố tôi là một người nấu ăn rất giỏi.
+cooking|/ˈkʊkɪŋ/|Việc nấu nướng|She enjoys cooking meals for her family.|Cô ấy thích nấu các bữa ăn cho gia đình mình.
+cool|/kuːl/|Mát mẻ, ngầu|The evening breeze feels so cool and nice.|Làn gió buổi tối cảm giác thật mát mẻ và dễ chịu.
+correct|/kəˈrekt/|Đúng, chính xác, sửa lỗi|All of your answers on the test are correct.|Tất cả câu trả lời của bạn trong bài kiểm tra đều chính xác.
+cost|/kɔːst/|Giá tiền, trị giá|How much does this leather bag cost?|Chiếc túi da này có giá bao nhiêu tiền?
+could|/kʊd/|Có thể (quá khứ/lịch sự)|Could you open the door for me, please?|Bạn có thể mở cửa giúp tôi được không?
+country|/ˈkʌntri/|Đất nước, vùng quê|My grandparents live in the quiet country.|Ông bà tôi sống ở vùng quê yên tĩnh.
+course|/kɔːrs/|Khóa học|I am taking an online cooking course.|Tôi đang tham gia một khóa học nấu ăn trực tuyến.
+cousin|/ˈkʌzn/|Anh/chị/em họ|My cousin is coming to visit us today.|Anh họ của tôi sẽ đến thăm chúng tôi vào hôm nay.
+cow|/kaʊ/|Con bò sữa|The cows are eating grass in the field.|Những con bò đang ăn cỏ trên cánh đồng.
+cream|/kriːm/|Kem, kem sữa|Do you want milk or cream in your coffee?|Bạn muốn cho sữa hay kem vào cà phê của mình?
+create|/kriˈeɪt/|Tạo ra, sáng tạo|This app helps you create flashcards easily.|Ứng dụng này giúp bạn tạo thẻ học từ vựng một cách dễ dàng.
+culture|/ˈkʌltʃər/|Văn hóa|Learning a language helps you understand its culture.|Học một ngôn ngữ giúp bạn hiểu được văn hóa của nó.
+cup|/kʌp/|Tách, cốc, chiếc cúp|Would you like a cup of green tea?|Bạn có muốn uống một tách trà xanh không?
+customer|/ˈkʌstəmər/|Khách hàng|The shop assistant smiled at the customer.|Nhân viên bán hàng mỉm cười với khách hàng.
+cut|/kʌt/|Cắt, thái|Be careful not to cut your finger.|Hãy cẩn thận kẻo cắt vào ngón tay của bạn.
+dad|/dæd/|Bố, ba|My dad taught me how to ride a bike.|Bố tôi đã dạy tôi cách đi xe đạp.
+dance|/dæns/|Nhảy múa, khiêu vũ|Would you like to dance with me?|Bạn có muốn khiêu vũ cùng tôi không?
+dancer|/ˈdænsər/|Vũ công|She trained hard to become a professional dancer.|Cô ấy đã tập luyện chăm chỉ để trở thành vũ công chuyên nghiệp.
+dancing|/ˈdænsɪŋ/|Môn khiêu vũ, việc nhảy múa|Dancing is a fun way to stay fit.|Khiêu vũ là một cách thú vị để giữ dáng.
+dangerous|/ˈdeɪndʒərəs/|Nguy hiểm|Driving too fast in the rain is dangerous.|Lái xe quá nhanh dưới trời mưa rất nguy hiểm.
+dark|/dɑːrk/|Tối, sẫm màu|It gets dark very early in winter.|Trời tối rất sớm vào mùa đông.
+date|/deɪt/|Ngày tháng, cuộc hẹn|What is the date of your birth?|Ngày tháng năm sinh của bạn là gì?
+daughter|/ˈdɔːtər/|Con gái (trong gia đình)|Their daughter is five years old now.|Con gái của họ hiện nay đã lên năm tuổi.
+day|/deɪ/|Ngày, ban ngày|Have a wonderful day at work!|Chúc bạn có một ngày làm việc tuyệt vời!
+dear|/dɪr/|Thân mến, yêu quý|Dear friend, thank you for your warm letter.|Bạn thân mến, cảm ơn bức thư ấm áp của bạn.
+decide|/dɪˈsaɪd/|Quyết định|We need to decide where to eat tonight.|Chúng ta cần quyết định xem tối nay ăn ở đâu.
+delicious|/dɪˈlɪʃəs/|Ngon miệng|The soup you made smells so delicious.|Món súp bạn nấu có mùi thơm ngon quá.
+describe|/dɪˈskraɪb/|Miêu tả, mô tả|Can you describe the man you saw?|Bạn có thể miêu tả người đàn ông mà bạn đã nhìn thấy không?
+description|/dɪˈskrɪpʃn/|Sự miêu tả, bản mô tả|Read the product description carefully before buying.|Hãy đọc kỹ mô tả sản phẩm trước khi mua.
+design|/dɪˈzaɪn/|Thiết kế|I really like the simple design of this room.|Tôi thực sự thích thiết kế đơn giản của căn phòng này.
+desk|/desk/|Bàn làm việc, bàn học|Keep your study desk neat and clean.|Hãy giữ bàn học của bạn gọn gàng và sạch sẽ.
+detail|/ˈdiːteɪl/|Chi tiết|Please explain the plan in more detail.|Vui lòng giải thích kế hoạch một cách chi tiết hơn.
+dialogue|/ˈdaɪəlɔːɡ/|Cuộc đối thoại, hội thoại|Practice reading the dialogue with your partner.|Hãy luyện đọc đoạn hội thoại với bạn cùng nhóm của bạn.
+dictionary|/ˈdɪkʃəneri/|Từ điển|Look up the new word in your dictionary.|Hãy tra từ mới này trong từ điển của bạn.
+die|/daɪ/|Chết, mất|Flowers will die quickly without water.|Hoa sẽ nhanh héo chết nếu không có nước.
+diet|/ˈdaɪət/|Chế độ ăn uống, ăn kiêng|A balanced diet includes vegetables and fruit.|Một chế độ ăn uống cân bằng bao gồm rau củ và trái cây.
+difference|/ˈdɪfrəns/|Sự khác biệt|Can you tell the difference between these two photos?|Bạn có thể nhận ra sự khác biệt giữa hai bức ảnh này không?
+different|/ˈdɪfrənt/|Khác nhau|We have different opinions on this topic.|Chúng tôi có những ý kiến khác nhau về chủ đề này.
+difficult|/ˈdɪfɪkəlt/|Khó khăn|Learning a new language is not too difficult.|Học một ngôn ngữ mới không quá khó khăn.
+dinner|/ˈdɪnər/|Bữa tối|What are we having for dinner tonight?|Tối nay chúng ta sẽ ăn món gì cho bữa tối?
+      `,
+      2: ``, 3: ``, 4: ``, 5: ``
+    };
+
+    const DATA_ZH = {
+      1: `有趣|yǒu qù|Thú vị, hay ho|这本书非常有趣。|Cuốn sách này vô cùng thú vị.`,
+      2: ``, 3: ``, 4: ``, 5: ``
+    };
+
+    const DATA_ID = {
+      1: `menarik|Thú vị, hấp dẫn|Cerita itu sangat menarik.|Câu chuyện đó rất thú vị.`,
+      2: ``, 3: ``, 4: ``, 5: ``
+    };
+
+    const DATA_KO = {
+      1: `재미있다|[jae-mi-it-da]|Thú vị, hay|이 영화는 정말 재미있어요.|Bộ phim này thực sự rất thú vị.`,
+      2: ``, 3: ``, 4: ``, 5: ``
+    };
+
+    /* =========================================================================
+       HỆ THỐNG NẠP HÀNG LOẠT & QUẢN LÝ DỮ LIỆU
+       ========================================================================= */
+    function parseLinesToCards(rawText, hasPhonetic = true) {
+      return rawText
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.length > 0 && !line.startsWith("//") && line.includes("|"))
+        .map(line => {
+          const parts = line.split("|").map(p => p.trim());
+          return hasPhonetic
+            ? { word: parts[0] || "", phonetic: parts[1] || "", meaning: parts[2] || "", example: parts[3] || "", exampleVi: parts[4] || "" }
+            : { word: parts[0] || "", phonetic: "", meaning: parts[1] || "", example: parts[2] || "", exampleVi: parts[3] || "" };
+        });
+    }
+
+    function parseEasyData(rawObj, hasPhonetic = true) {
+      const result = {};
+      Object.keys(rawObj).forEach(lv => {
+        result[lv] = typeof rawObj[lv] === "string" ? parseLinesToCards(rawObj[lv], hasPhonetic) : [];
+      });
+      return result;
+    }
+
+    const LANG_CONFIG = {
+      en: { name: "Tiếng Anh", tag: "TỪ TIẾNG ANH", tts: "en-US", hasPhonetic: true, source: parseEasyData(DATA_EN, true) },
+      zh: { name: "Tiếng Trung", tag: "TỪ TIẾNG TRUNG", tts: "zh-CN", hasPhonetic: true, source: parseEasyData(DATA_ZH, true) },
+      id: { name: "Tiếng Indonesia", tag: "TỪ TIẾNG INDONESIA", tts: "id-ID", hasPhonetic: false, source: parseEasyData(DATA_ID, false) },
+      ko: { name: "Tiếng Hàn", tag: "TỪ TIẾNG HÀN", tts: "ko-KR", hasPhonetic: true, source: parseEasyData(DATA_KO, true) }
+    };
+
+    let currentLang = "en";
+    let currentLevel = 1;
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    function getDeckObject(lang) {
+      const base = JSON.parse(JSON.stringify(LANG_CONFIG[lang].source));
+      const savedRaw = localStorage.getItem(`worddeck_custom_${lang}`);
+      if (savedRaw) {
+        try {
+          const custom = JSON.parse(savedRaw);
+          Object.keys(custom).forEach(lv => {
+            if (!base[lv]) base[lv] = [];
+            custom[lv].forEach(item => {
+              if (!base[lv].some(x => x.word.toLowerCase() === item.word.toLowerCase())) {
+                base[lv].push(item);
+              }
+            });
+          });
+        } catch (e) {}
+      }
+      return base;
+    }
+
+    function importBulkText() {
+      const raw = document.getElementById("bulkInput").value.trim();
+      const toast = document.getElementById("toastMsg");
+      if (!raw) {
+        toast.style.color = "#dc2626";
+        toast.textContent = "Bạn hãy dán danh sách từ vào ô trống trước nhé!";
+        return;
+      }
+
+      const cfg = LANG_CONFIG[currentLang];
+      const newCards = parseLinesToCards(raw, cfg.hasPhonetic);
+      if (newCards.length === 0) {
+        toast.style.color = "#dc2626";
+        toast.textContent = "Không tìm thấy dòng hợp lệ (cần có dấu | ngăn cách)!";
+        return;
+      }
+
+      const savedRaw = localStorage.getItem(`worddeck_custom_${currentLang}`);
+      const custom = savedRaw ? JSON.parse(savedRaw) : {};
+      if (!custom[currentLevel]) custom[currentLevel] = [];
+
+      let addedCount = 0;
+      const existingDeck = getDeckObject(currentLang)[currentLevel] || [];
+
+      newCards.forEach(card => {
+        const existsInBase = existingDeck.some(x => x.word.toLowerCase() === card.word.toLowerCase());
+        const existsInCustom = custom[currentLevel].some(x => x.word.toLowerCase() === card.word.toLowerCase());
+        if (!existsInBase && !existsInCustom) {
+          custom[currentLevel].push(card);
+          addedCount++;
+        }
+      });
+
+      localStorage.setItem(`worddeck_custom_${currentLang}`, JSON.stringify(custom));
+      document.getElementById("bulkInput").value = "";
+      toast.style.color = "#15803d";
+      toast.textContent = `Đã nạp thành công thêm ${addedCount} từ mới vào Level ${currentLevel}!`;
+
+      setTimeout(() => {
+        toast.textContent = "";
+        switchMode("study");
+        renderCard();
+      }, 1100);
+    }
+
+    function clearCurrentLevel() {
+      if (!confirm(`Bạn có chắc muốn xoá các từ đã nạp thêm ở Level ${currentLevel}?`)) return;
+      const savedRaw = localStorage.getItem(`worddeck_custom_${currentLang}`);
+      if (savedRaw) {
+        const custom = JSON.parse(savedRaw);
+        delete custom[currentLevel];
+        localStorage.setItem(`worddeck_custom_${currentLang}`, JSON.stringify(custom));
+      }
+      renderCard();
+      document.getElementById("toastMsg").textContent = "Đã làm sạch dữ liệu nạp thêm của Level này.";
+    }
+
+    function exportAllData() {
+      const backup = {};
+      ["en", "zh", "id", "ko"].forEach(l => {
+        const raw = localStorage.getItem(`worddeck_custom_${l}`);
+        if (raw) backup[l] = JSON.parse(raw);
+      });
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "worddeck-backup.json";
+      a.click();
+    }
+
+    function importFromFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          Object.keys(data).forEach(l => {
+            localStorage.setItem(`worddeck_custom_${l}`, JSON.stringify(data[l]));
+          });
+          alert("Đã khôi phục toàn bộ từ vựng thành công!");
+          renderLevelBar();
+          renderCard();
+          switchMode("study");
+        } catch (err) {
+          alert("File không hợp lệ!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function selectLanguage(lang) {
+      currentLang = lang;
+      currentLevel = 1;
+      currentIndex = 0;
+      resetFlip();
+
+      document.querySelectorAll(".lang-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.lang === lang);
+      });
+
+      renderLevelBar();
+      renderCard();
+      updateAddFormVisibility();
+    }
+
+    function selectLevel(lv) {
+      currentLevel = Number(lv);
+      currentIndex = 0;
+      resetFlip();
+      renderLevelBar();
+      renderCard();
+      updateAddFormVisibility();
+    }
+
+    function addMoreLevel() {
+      const deckObj = getDeckObject(currentLang);
+      const levels = Object.keys(deckObj).map(Number);
+      const nextLv = levels.length ? Math.max(...levels) + 1 : 1;
+      const savedRaw = localStorage.getItem(`worddeck_custom_${currentLang}`);
+      const custom = savedRaw ? JSON.parse(savedRaw) : {};
+      if (!custom[nextLv]) custom[nextLv] = [];
+      localStorage.setItem(`worddeck_custom_${currentLang}`, JSON.stringify(custom));
+      selectLevel(nextLv);
+    }
+
+    function renderLevelBar() {
+      const bar = document.getElementById("levelBar");
+      const deckObj = getDeckObject(currentLang);
+      const levels = Object.keys(deckObj).map(Number).sort((a, b) => a - b);
+
+      bar.innerHTML = "";
+      levels.forEach(lv => {
+        const btn = document.createElement("button");
+        btn.className = "level-pill" + (lv === currentLevel ? " active" : "");
+        btn.textContent = `Level ${lv}`;
+        btn.onclick = () => selectLevel(lv);
+        bar.appendChild(btn);
+      });
+
+      const addBtn = document.createElement("button");
+      addBtn.className = "level-add-btn";
+      addBtn.textContent = "+ Thêm Level";
+      addBtn.onclick = addMoreLevel;
+      bar.appendChild(addBtn);
+    }
+
+    function getCurrentList() {
+      const deckObj = getDeckObject(currentLang);
+      return deckObj[currentLevel] || [];
+    }
+
+    function fitFrontText() {
+      const wrap = document.getElementById("frontWordWrap");
+      const textEl = document.getElementById("frontWordText");
+      if (!wrap || !textEl) return;
+
+      let size = 42;
+      const minSize = 15;
+      textEl.style.fontSize = size + "px";
+
+      const maxWidth = wrap.clientWidth - 8;
+      while (textEl.scrollWidth > maxWidth && size > minSize) {
+        size -= 1;
+        textEl.style.fontSize = size + "px";
+      }
+    }
+
+    function renderCard() {
+      const cfg = LANG_CONFIG[currentLang];
+      const list = getCurrentList();
+      const total = list.length;
+
+      document.getElementById("frontLangLabel").textContent = cfg.tag;
+      document.getElementById("levelLabelRight").textContent = `LEVEL ${currentLevel}`;
+      document.getElementById("totalBadgeText").textContent = `${total} từ trong bộ thẻ`;
+
+      const phoneticRow = document.getElementById("backPhoneticRow");
+      if (cfg.hasPhonetic) {
+        phoneticRow.classList.remove("hidden");
+      } else {
+        phoneticRow.classList.add("hidden");
+      }
+
+      if (total === 0) {
+        document.getElementById("progressText").textContent = "00 / 00";
+        document.getElementById("progressFill").style.width = "0%";
+        document.getElementById("frontWordText").textContent = "Chưa có từ vựng";
+        document.getElementById("backCardNumber").textContent = "00";
+        document.getElementById("backWordText").textContent = "Chưa có từ vựng";
+        document.getElementById("backPhoneticText").textContent = "—";
+        document.getElementById("backMeaningText").textContent = "Bấm '+ Nạp từ vựng' ở trên để dán từ vào";
+        document.getElementById("backExampleText").textContent = "Chưa có câu ví dụ cho Level này.";
+        document.getElementById("backExampleViText").textContent = "";
+        requestAnimationFrame(fitFrontText);
+        return;
+      }
+
+      if (currentIndex >= total) currentIndex = 0;
+      if (currentIndex < 0) currentIndex = total - 1;
+
+      const item = list[currentIndex];
+      const numStr = String(currentIndex + 1).padStart(2, "0");
+      const totStr = String(total).padStart(2, "0");
+
+      document.getElementById("progressText").textContent = `${numStr} / ${totStr}`;
+      document.getElementById("progressFill").style.width = `${((currentIndex + 1) / total) * 100}%`;
+
+      document.getElementById("frontWordText").textContent = item.word || "";
+
+      document.getElementById("backCardNumber").textContent = numStr;
+      document.getElementById("backWordText").textContent = item.word || "";
+      document.getElementById("backPhoneticText").textContent = item.phonetic || "";
+      document.getElementById("backMeaningText").textContent = item.meaning || "";
+      document.getElementById("backExampleText").textContent = item.example || "";
+      document.getElementById("backExampleViText").textContent = item.exampleVi || "";
+
+      requestAnimationFrame(fitFrontText);
+    }
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      const cardInner = document.getElementById("cardInner");
+      const btnLabel = document.getElementById("flipBtnLabel");
+      cardInner.classList.toggle("is-flipped", isFlipped);
+      btnLabel.textContent = isFlipped ? "Xem mặt trước" : "Lật thẻ";
+    }
+
+    function resetFlip() {
+      isFlipped = false;
+      document.getElementById("cardInner").classList.remove("is-flipped");
+      document.getElementById("flipBtnLabel").textContent = "Lật thẻ";
+    }
+
+    function nextCard() {
+      const list = getCurrentList();
+      if (!list.length) return;
+      resetFlip();
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % list.length;
+        renderCard();
+      }, 120);
+    }
+
+    function prevCard() {
+      const list = getCurrentList();
+      if (!list.length) return;
+      resetFlip();
+      setTimeout(() => {
+        currentIndex = (currentIndex - 1 + list.length) % list.length;
+        renderCard();
+      }, 120);
+    }
+
+    function speakWord(e) {
+      e.stopPropagation();
+      const list = getCurrentList();
+      if (!list.length) return;
+      const word = list[currentIndex].word;
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(word);
+      utter.lang = LANG_CONFIG[currentLang].tts;
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function switchMode(mode) {
+      const studyView = document.getElementById("studyView");
+      const addView = document.getElementById("addView");
+      const tabStudyBtn = document.getElementById("tabStudyBtn");
+      const tabAddBtn = document.getElementById("tabAddBtn");
+
+      if (mode === "study") {
+        studyView.classList.remove("hidden");
+        addView.classList.remove("active");
+        tabStudyBtn.classList.add("active");
+        tabAddBtn.classList.remove("active");
+        requestAnimationFrame(fitFrontText);
+      } else {
+        studyView.classList.add("hidden");
+        addView.classList.add("active");
+        tabStudyBtn.classList.remove("active");
+        tabAddBtn.classList.add("active");
+        updateAddFormVisibility();
+      }
+    }
+
+    function updateAddFormVisibility() {
+      const cfg = LANG_CONFIG[currentLang];
+      document.getElementById("addTargetLabel").textContent = `${cfg.name} - Level ${currentLevel}`;
+      const bulkInput = document.getElementById("bulkInput");
+      if (cfg.hasPhonetic) {
+        bulkInput.placeholder = "Dán danh sách từ vào đây...\nVí dụ:\nfamily|/ˈfæməli/|Gia đình|I love my family.|Tôi yêu gia đình mình.";
+      } else {
+        bulkInput.placeholder = "Dán danh sách từ Indonesia (không cần phiên âm)...\nVí dụ:\nmenarik|Thú vị|Cerita itu menarik.|Câu chuyện đó thú vị.";
+      }
+    }
+
+    window.addEventListener("resize", fitFrontText);
+    window.addEventListener("DOMContentLoaded", () => {
+      renderLevelBar();
+      renderCard();
+    });
+  </script>
+</body>
+</html>
